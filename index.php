@@ -184,7 +184,7 @@ if (! empty($_REQUEST['tw'])) {
     <div class="timeline">
 <?php
         foreach ($times->messages as $item) {
-            $timestamp = new DateTime('@' . $item->ts);
+            $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
 ?>
         <div class="message clearfix">
             <div class="avatarWrap">

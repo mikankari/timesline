@@ -52,11 +52,14 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
         clear: both;
     }
     a {
-        color: inherit;
+        color: #999;
         text-decoration: none;
     }
     a:hover {
         text-decoration: underline;
+    }
+    .text a {
+        color: #006999;
     }
 <?php
 if (! empty($_REQUEST['tw'])) {
@@ -185,6 +188,8 @@ if (! empty($_REQUEST['tw'])) {
 <?php
         foreach ($times->messages as $item) {
             $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
+            $text = str_replace("\n", '<br>', $item->text);
+            $text = preg_replace('/<(https?\:\/\/[^<> ]+)>/', '<a href="$1" target="_blank">$1</a>', $text);
 ?>
         <div class="message clearfix">
             <div class="avatarWrap">
@@ -199,7 +204,7 @@ if (! empty($_REQUEST['tw'])) {
                             <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?></div>
                         </a>
                 </div>
-                <div class="text"><?php print str_replace("\n", '<br>', $item->text); ?></div>
+                <div class="text"><?php print $text; ?></div>
             </div>
         </div>
 <?php

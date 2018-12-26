@@ -51,6 +51,10 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
         display: block;
         clear: both;
     }
+    textarea {
+        background-color: transparent;
+        color: inherit;
+    }
     a {
         color: #999;
         text-decoration: none;
@@ -60,6 +64,16 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
     }
     .text a {
         color: #006999;
+    }
+    body.dark {
+        background-color: #333;
+        color: #e6e6e6;
+    }
+    .dark textarea {
+        border-color: #ccc;
+    }
+    .dark .text a {
+        color: #00AEFF;
     }
 <?php
 if (! empty($_REQUEST['tw'])) {
@@ -85,7 +99,10 @@ if (! empty($_REQUEST['tw'])) {
     }
     .message {
         padding: 6px 4px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f2f2f2;
+    }
+    .dark .message {
+        border-bottom-color: #404040;
     }
     .avatarWrap, .textWrap {
         margin: 4px;
@@ -169,7 +186,7 @@ if (! empty($_REQUEST['tw'])) {
 </style>
 </head>
 
-<body>
+<body class="<?php print ! empty($_REQUEST['dark']) ? 'dark' : '' ?>">
 <div class="container">
     <div class="me">
         <div class="message clearfix">

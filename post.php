@@ -35,7 +35,7 @@ $result = json_decode(file_get_contents('https://slack.com/api/chat.postMessage'
 ])));
 
 if ($result->ok) {
-    header('Location: .?tw=0');
+    header('Location: .?tw=0&dark=0');
 } else {
     print 'failed post';
 }

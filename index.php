@@ -31,7 +31,6 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="1800">
 <title>#times line</title>
 <link rel="stylesheet" href="//cdn.jsdelivr.net/normalize/7.0.0/normalize.css" />
 <style>
@@ -187,6 +186,13 @@ if (! empty($_REQUEST['tw'])) {
 </head>
 
 <body class="<?php print ! empty($_REQUEST['dark']) ? 'dark' : '' ?>">
+<script type="text/javascript">
+    setInterval(() => {
+        if (document.getElementById('message').value === '') {
+            location.reload();
+        }
+    }, 1800000);
+</script>
 <div class="container">
     <div class="me">
         <div class="message clearfix">
@@ -195,7 +201,7 @@ if (! empty($_REQUEST['tw'])) {
             </div>
             <div class="textWrap">
                 <form action="post.php" method="post">
-                    <textarea name="text" placeholder=""></textarea>
+                    <textarea name="text" id="message" placeholder=""></textarea>
                     <input type="submit">
                 </form>
             </div>

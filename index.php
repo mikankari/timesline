@@ -167,6 +167,13 @@ if (! empty($_REQUEST['tw'])) {
 </head>
 
 <body>
+<script type="text/javascript">
+    setInterval(() => {
+        if (document.getElementById('message').value === '') {
+            location.reload();
+        }
+    }, 1800000);
+</script>
 <div class="container">
     <div class="me">
         <div class="message clearfix">

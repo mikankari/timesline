@@ -175,7 +175,7 @@ if (! empty($_REQUEST['tw'])) {
             </div>
             <div class="textWrap">
                 <form action="post.php" method="post">
-                    <textarea name="text" placeholder=""></textarea>
+                    <textarea name="text" id="message" placeholder=""></textarea>
                     <input type="submit">
                 </form>
             </div>

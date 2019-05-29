@@ -192,6 +192,19 @@ if (! empty($_REQUEST['tw'])) {
             location.reload();
         }
     }, 1800000);
+
+    // 長押し対策
+    let isFirstPost = true;
+
+    document.onkeydown = (e) => {
+      if (e.key === 'Enter'
+        && e.metaKey
+        && isFirstPost
+      ) {
+        isFirstPost = false;
+        document.submitButton.submit();
+      }
+    }
 </script>
 <div class="container">
     <div class="me">

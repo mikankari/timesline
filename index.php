@@ -200,6 +200,7 @@ if (! empty($_REQUEST['tw'])) {
       if (e.key === 'Enter'
         && e.metaKey
         && isFirstPost
+        && document.getElementsByName('text')[0].value !== ''
       ) {
         isFirstPost = false;
         document.submitButton.submit();

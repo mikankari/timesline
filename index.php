@@ -197,17 +197,17 @@ if (! empty($_REQUEST['tw'])) {
     let isFirstPost = true;
 
     document.onkeydown = (e) => {
-      if (isPressedSubmitKey(e)
-        && isFirstPost
-        && document.getElementsByName('text')[0].value !== ''
-      ) {
-        isFirstPost = false;
-        document.submitButton.submit();
-      }
+        if (isPressedSubmitKey(e)
+            && isFirstPost
+            && document.getElementsByName('text')[0].value !== ''
+        ) {
+            isFirstPost = false;
+            document.submitButton.submit();
+        }
     };
 
     const isPressedSubmitKey = (keyEvent) => {
-      return keyEvent.key === 'Enter' && (keyEvent.ctrlKey || keyEvent.metaKey);
+        return keyEvent.key === 'Enter' && (keyEvent.ctrlKey || keyEvent.metaKey);
     };
 </script>
 <div class="container">

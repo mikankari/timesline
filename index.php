@@ -197,15 +197,18 @@ if (! empty($_REQUEST['tw'])) {
     let isFirstPost = true;
 
     document.onkeydown = (e) => {
-      if (e.key === 'Enter'
-        && (e.ctrlKey || e.metaKey)
+      if (isPressedSubmitKey(e)
         && isFirstPost
         && document.getElementsByName('text')[0].value !== ''
       ) {
         isFirstPost = false;
         document.submitButton.submit();
       }
-    }
+    };
+
+    const isPressedSubmitKey = (keyEvent) => {
+      return keyEvent.key === 'Enter' && (keyEvent.ctrlKey || keyEvent.metaKey);
+    };
 </script>
 <div class="container">
     <div class="me">

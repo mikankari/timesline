@@ -198,7 +198,7 @@ if (! empty($_REQUEST['tw'])) {
 
     document.onkeydown = (e) => {
       if (e.key === 'Enter'
-        && e.metaKey
+        && (e.ctrlKey || e.metaKey)
         && isFirstPost
         && document.getElementsByName('text')[0].value !== ''
       ) {

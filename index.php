@@ -202,7 +202,7 @@ if (! empty($_REQUEST['tw'])) {
             && document.getElementsByName('text')[0].value !== ''
         ) {
             isFirstPost = false;
-            document.submitButton.submit();
+            document.forms.posting.submit();
         }
     };
 

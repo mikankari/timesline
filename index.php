@@ -217,7 +217,7 @@ if (! empty($_REQUEST['tw'])) {
                 <div class="avatar"><img src="<?php print $members[$_SESSION['user_id']]->profile->image_48; ?>" alt="avatar"></div>
             </div>
             <div class="textWrap">
-                <form action="post.php" method="post" name="submitButton">
+                <form action="post.php" method="post" name="posting">
                     <textarea name="text" id="message" placeholder=""></textarea>
                     <input type="submit">
                 </form>

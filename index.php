@@ -192,6 +192,23 @@ if (! empty($_REQUEST['tw'])) {
             location.reload();
         }
     }, 1800000);
+
+    // 長押し対策
+    let isFirstPost = true;
+
+    document.onkeydown = (e) => {
+        if (isPressedSubmitKey(e)
+            && isFirstPost
+            && document.getElementsByName('text')[0].value !== ''
+        ) {
+            isFirstPost = false;
+            document.forms.posting.submit();
+        }
+    };
+
+    const isPressedSubmitKey = (keyEvent) => {
+        return keyEvent.key === 'Enter' && (keyEvent.ctrlKey || keyEvent.metaKey);
+    };
 </script>
 <div class="container">
     <div class="me">
@@ -200,7 +217,7 @@ if (! empty($_REQUEST['tw'])) {
                 <div class="avatar"><img src="<?php print $members[$_SESSION['user_id']]->profile->image_48; ?>" alt="avatar"></div>
             </div>
             <div class="textWrap">
-                <form action="post.php" method="post">
+                <form action="post.php" method="post" name="posting">
                     <textarea name="text" id="message" placeholder=""></textarea>
                     <input type="submit">
                 </form>

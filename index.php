@@ -245,6 +245,15 @@ if (! empty($_REQUEST['tw'])) {
                         </a>
                 </div>
                 <div class="text"><?php print $text; ?></div>
+                <?php
+                    if (isset($item->reactions)) {
+                        foreach ($item->reactions as $reaction) {
+                            echo '<span class="reaction">';
+                                echo ':' . $reaction->name . ':' . $reaction->count;
+                            echo '</span>';
+                        }
+                    }
+                ?>
             </div>
         </div>
 <?php

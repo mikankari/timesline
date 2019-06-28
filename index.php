@@ -74,6 +74,12 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
     .dark .text a {
         color: #00AEFF;
     }
+    .reaction {
+        font-size: 0.8rem;
+        margin-right: 5px;
+        margin-top: 8px;
+        display: inline-block;
+    }
 <?php
 if (! empty($_REQUEST['tw'])) {
 ?>
@@ -248,9 +254,7 @@ if (! empty($_REQUEST['tw'])) {
                 <?php
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
-                            echo '<span class="reaction">';
-                                echo ':' . $reaction->name . ':' . $reaction->count;
-                            echo '</span>';
+                            echo '<div class="reaction">' . ':' . $reaction->name . ':' . $reaction->count . '</div>';
                         }
                     }
                 ?>

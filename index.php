@@ -10,6 +10,9 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] != 2) {
 $users = json_decode(file_get_contents('https://slack.com/api/users.list?' . http_build_query([
     'token'     => $_SESSION['access_token'],
 ])));
+$emojis = json_decode(file_get_contents('https://slack.com/api/emoji.list?' . http_build_query([
+    'token'     => $_SESSION['access_token'],
+])));
 foreach ($users->members as $item) {
     if (isset($members[$item->id])) {
         continue;
@@ -24,7 +27,19 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
     'count'     => 1000,
 ])));
 
-//var_dump($users);
+$emojiPattern = json_decode(file_get_contents('https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json'), true);
+
+function findEmojiCode($emojiPattern, $shortName)
+{
+    $offset = false;
+    foreach ($emojiPattern as $offset => $child) {
+        if ($child['short_name'] === $shortName) {
+            break;
+        }
+        $offset = false;
+    }
+    return '&#x' . $emojiPattern[$offset]['unified'];
+}
 
 ?>
 <!DOCTYPE html>
@@ -254,7 +269,11 @@ if (! empty($_REQUEST['tw'])) {
                 <?php
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
-                            echo '<div class="reaction">' . ':' . $reaction->name . ':' . $reaction->count . '</div>';
+                            if (isset($emojis->emoji->{$reaction->name})) {
+                                echo "<div class='reaction'> <img class='reaction' src='{$emojis->emoji->{$reaction->name}}'>: {$reaction->count} </div>";
+                            } else {
+                                echo "<div class='reaction'>". findEmojiCode($emojiPattern, $reaction->name) . ": {$reaction->count} </div>";
+                            }
                         }
                     }
                 ?>

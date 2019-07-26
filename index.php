@@ -90,10 +90,14 @@ function findEmojiCode($emojiPattern, $shortName)
         color: #00AEFF;
     }
     .reaction {
-        font-size: 0.8rem;
-        margin-right: 5px;
+        font-size: 0.9rem;
+        margin-right: 15px;
         margin-top: 8px;
         display: inline-block;
+        height: 1em;
+    }
+    .reaction-img {
+        height: 1em;
     }
 <?php
 if (! empty($_REQUEST['tw'])) {
@@ -270,9 +274,9 @@ if (! empty($_REQUEST['tw'])) {
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
                             if (isset($emojis->emoji->{$reaction->name})) {
-                                echo "<div class='reaction'> <img class='reaction' src='{$emojis->emoji->{$reaction->name}}'>: {$reaction->count} </div>";
+                                echo "<div class='reaction'> <img class='reaction-img' src='{$emojis->emoji->{$reaction->name}}'>{$reaction->count}</div>";
                             } else {
-                                echo "<div class='reaction'>". findEmojiCode($emojiPattern, $reaction->name) . ": {$reaction->count} </div>";
+                                echo "<div class='reaction'>". findEmojiCode($emojiPattern, $reaction->name) . "{$reaction->count}</div>";
                             }
                         }
                     }

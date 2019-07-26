@@ -245,6 +245,25 @@ if (! empty($_REQUEST['tw'])) {
                         </a>
                 </div>
                 <div class="text"><?php print $text; ?></div>
+<?php
+            if (property_exists($item, 'files')) {
+                foreach ($item->files as $file) {
+?>
+                <div class="text">
+                    <a href="<?php print $file->url_private; ?>" target="_blank">
+<?php
+                    if (property_exists($file, 'thumb_160')) {
+                        print '<img src="' . $file->thumb_160 . '" alt="thumb">';
+                    } else {
+                        print $file->name;
+                    }
+?>
+                    </a>
+                </div>
+<?php
+                }
+            }
+?>
             </div>
         </div>
 <?php

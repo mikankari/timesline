@@ -38,7 +38,7 @@ function findEmojiCode($emojiPattern, $shortName)
         }
         $offset = false;
     }
-    return '&#x' . $emojiPattern[$offset]['unified'];
+    return str_replace('-', ';&#x', '&#x' . $emojiPattern[$offset]['unified'] . ';');
 }
 
 ?>

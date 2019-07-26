@@ -38,6 +38,8 @@ function findEmojiCode($emojiPattern, $shortName)
         }
         $offset = false;
     }
+
+    // -を;&#xに置換してマルチバイトemojiに対応
     return str_replace('-', ';&#x', '&#x' . $emojiPattern[$offset]['unified'] . ';');
 }
 

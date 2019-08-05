@@ -27,12 +27,12 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
     'count'     => 1000,
 ])));
 
-$emojiPattern = json_decode(file_get_contents('https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json'), true);
+$unifiedEmojis = json_decode(file_get_contents('https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji.json'), true);
 
-function findEmojiCode($emojiPattern, $shortName)
+function findEmojiCode($unifiedEmojis, $shortName)
 {
     $offset = false;
-    foreach ($emojiPattern as $offset => $child) {
+    foreach ($unifiedEmojis as $offset => $child) {
         if ($child['short_name'] === $shortName) {
             break;
         }
@@ -40,7 +40,7 @@ function findEmojiCode($emojiPattern, $shortName)
     }
 
     // -を;&#xに置換してマルチバイトemojiに対応
-    return str_replace('-', ';&#x', '&#x' . $emojiPattern[$offset]['unified'] . ';');
+    return str_replace('-', ';&#x', '&#x' . $unifiedEmojis[$offset]['unified'] . ';');
 }
 
 ?>
@@ -275,10 +275,10 @@ if (! empty($_REQUEST['tw'])) {
                 <?php
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
-                            if (isset($emojis->emoji->{$reaction->name})) {
-                                echo "<div class='reaction'> <img class='reaction-img' src='{$emojis->emoji->{$reaction->name}}'>{$reaction->count}</div>";
+                            if (isset($customEmojis->emoji->{$reaction->name})) {
+                                echo "<div class='reaction'> <img class='reaction-img' src='{$customEmojis->emoji->{$reaction->name}}'>{$reaction->count}</div>";
                             } else {
-                                echo "<div class='reaction'>". findEmojiCode($emojiPattern, $reaction->name) . "{$reaction->count}</div>";
+                                echo "<div class='reaction'>". findEmojiCode($unifiedEmojis, $reaction->name) . "{$reaction->count}</div>";
                             }
                         }
                     }

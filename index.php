@@ -272,6 +272,7 @@ if (! empty($_REQUEST['tw'])) {
                         </a>
                 </div>
                 <div class="text"><?php print $text; ?></div>
+                <div class="reactionWrap">
                 <?php
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
@@ -292,6 +293,7 @@ if (! empty($_REQUEST['tw'])) {
                     }
                 ?>
             </div>
+        </div>
         </div>
 <?php
         }

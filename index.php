@@ -276,9 +276,18 @@ if (! empty($_REQUEST['tw'])) {
                     if (isset($item->reactions)) {
                         foreach ($item->reactions as $reaction) {
                             if (isset($customEmojis->emoji->{$reaction->name})) {
-                                echo "<div class='reaction'> <img class='reaction-img' src='{$customEmojis->emoji->{$reaction->name}}'>{$reaction->count}</div>";
+?>
+                                <div class="reaction">
+                                    <img class="reaction-img" src="<?php print $customEmojis->emoji->{$reaction->name} ?>">
+                                    <?php print $reaction->count ?>
+                                </div>
+<?php
                             } else {
-                                echo "<div class='reaction'>". findEmojiCode($unifiedEmojis, $reaction->name) . "{$reaction->count}</div>";
+?>
+                                <div class='reaction'>
+                                    <?php print findEmojiCode($unifiedEmojis, $reaction->name) ?><?php print $reaction->count ?>
+                                </div>;
+<?php
                             }
                         }
                     }

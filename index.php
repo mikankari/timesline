@@ -278,15 +278,14 @@ if (! empty($_REQUEST['tw'])) {
                             if (isset($customEmojis->emoji->{$reaction->name})) {
 ?>
                                 <div class="reaction">
-                                    <img class="reaction-img" src="<?php print $customEmojis->emoji->{$reaction->name} ?>">
-                                    <?php print $reaction->count ?>
+                                    <img class="reaction-img" src="<?php print $customEmojis->emoji->{$reaction->name} ?>"><?php print $reaction->count ?>
                                 </div>
 <?php
                             } else {
 ?>
                                 <div class='reaction'>
                                     <?php print findEmojiCode($unifiedEmojis, $reaction->name) ?><?php print $reaction->count ?>
-                                </div>;
+                                </div>
 <?php
                             }
                         }

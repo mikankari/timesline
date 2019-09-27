@@ -31,6 +31,7 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
 <title>#times line</title>
 <link rel="stylesheet" href="//cdn.jsdelivr.net/normalize/7.0.0/normalize.css" />
 <style>

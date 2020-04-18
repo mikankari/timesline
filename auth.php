@@ -25,7 +25,7 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] == 0) {
         $_SESSION['state'] = 2;
         $_SESSION['user_id'] = $result->user_id;
         $_SESSION['access_token'] = $result->access_token;
-        header('Location: .?tw=0&dark=0');
+        header('Location: .');
     } else {
         $_SESSION['state'] = 0;
         print 'signing in failed';

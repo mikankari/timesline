@@ -24,6 +24,20 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
     'count'     => 1000,
 ])));
 
+$expire = time() + 60*60*24*30;
+if (array_key_exists('tw', $_GET)) {
+    setcookie('tw', $_GET['tw'] , $expire);
+    $_COOKIE['tw'] = $_GET['tw'];
+} elseif (array_key_exists('tw', $_COOKIE)) {
+    setcookie('tw', $_COOKIE['tw'], $expire);
+}
+if (array_key_exists('dark', $_GET)) {
+    setcookie('dark', $_GET['dark'], $expire);
+    $_COOKIE['dark'] = $_GET['dark'];
+} elseif (array_key_exists('dark', $_COOKIE)) {
+    setcookie('dark', $_COOKIE['dark'], $expire);
+}
+
 //var_dump($users);
 
 ?>
@@ -76,7 +90,7 @@ $times = json_decode(file_get_contents('https://slack.com/api/channels.history?'
         color: #00AEFF;
     }
 <?php
-if (! empty($_REQUEST['tw'])) {
+if (! empty($_COOKIE['tw'])) {
 ?>
     .me img {
         border-radius: 50%;
@@ -186,7 +200,7 @@ if (! empty($_REQUEST['tw'])) {
 </style>
 </head>
 
-<body class="<?php print ! empty($_REQUEST['dark']) ? 'dark' : '' ?>">
+<body class="<?php print ! empty($_COOKIE['dark']) ? 'dark' : '' ?>">
 <script type="text/javascript">
     setInterval(() => {
         if (document.getElementById('message').value === '') {

@@ -89,6 +89,9 @@ if (array_key_exists('dark', $_GET)) {
     .dark .text a {
         color: #00AEFF;
     }
+    .modes {
+        text-align: center;
+    }
 <?php
 if (! empty($_COOKIE['tw'])) {
 ?>
@@ -227,6 +230,11 @@ if (! empty($_COOKIE['tw'])) {
 </script>
 <div class="container">
     <div class="me">
+        <div class="message modes">
+            <a href=".?tw=<?php print (string) empty($_COOKIE['tw']) ?>">tw</a>
+            |
+            <a href=".?dark=<?php print (string) empty($_COOKIE['dark']) ?>">dark</a>
+        </div>
         <div class="message clearfix">
             <div class="avatarWrap">
                 <div class="avatar"><img src="<?php print $members[$_SESSION['user_id']]->profile->image_48; ?>" alt="avatar"></div>

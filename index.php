@@ -17,12 +17,21 @@ foreach ($users->members as $item) {
     $members[$item->id] = $item;
 }
 
-$times = json_decode(file_get_contents('https://slack.com/api/channels.history?' . http_build_query([
-    'token'     => $_SESSION['access_token'],
-    'channel'   => $config['channel'],
-    'oldest'    => (new DateTime('today'))->format('U'),
-    'count'     => 1000,
-])));
+foreach (array_merge([$config['channel']], array_keys($config['additional_chancels'])) as $channel) {
+    $times = json_decode(file_get_contents('https://slack.com/api/channels.history?' . http_build_query([
+        'token'     => $_SESSION['access_token'],
+        'channel'   => $channel,
+        'oldest'    => (new DateTime('today'))->format('U'),
+        'count'     => 1000,
+    ])));
+    foreach ($times->messages as $item) {
+        $item->channel = $channel;
+        $messages[] = $item;
+    }
+}
+usort($messages, function ($a, $b) {
+    return $b->ts - $a->ts;
+});
 
 $expire = time() + 60*60*24*30;
 if (array_key_exists('tw', $_GET)) {
@@ -249,7 +258,7 @@ if (! empty($_COOKIE['tw'])) {
     </div>
     <div class="timeline">
 <?php
-        foreach ($times->messages as $item) {
+        foreach ($messages as $item) {
             $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
             $text = str_replace("\n", '<br>', $item->text);
             $text = preg_replace('/<(https?\:\/\/[^<> ]+)>/', '<a href="$1" target="_blank">$1</a>', $text);
@@ -263,9 +272,17 @@ if (! empty($_COOKIE['tw'])) {
                     <div class="name"><?php print $members[$item->user]->real_name; ?></div>
                     <div class="screenname"><?php print $members[$item->user]->name; ?></div>
                     <div class="timestamp">
-                        <a href="https://sencorp-group.slack.com/archives/<?php print $config['channel']; ?>/p<?php print $item->ts; ?>">
-                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?></div>
+                        <a href="https://sencorp-group.slack.com/archives/<?php print $item->channel; ?>/p<?php print $item->ts; ?>">
+                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?>
+<?php
+                            if ($item->channel !== $config['channel']) {
+?>
+                            via #<?php print $config['additional_chancels'][$item->channel]['name']; ?>
+<?php
+                            }
+?>
                         </a>
+                    </div>
                 </div>
                 <div class="text"><?php print $text; ?></div>
             </div>

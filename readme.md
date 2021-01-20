@@ -12,7 +12,11 @@ $config = [
     'client_id' => '',
     'client_secret' => '',
     'team'  => '',
-    'channel' => '',
+    'channel' => 'CAAAAAAAAAA',
+    'channels => [
+        'CAAAAAAAAAA' => [],
+        'CBBBBBBBBBB' => [],
+    ],
 ];
 ```
 

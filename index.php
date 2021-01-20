@@ -17,11 +17,26 @@ foreach ($users->members as $item) {
     $members[$item->id] = $item;
 }
 
-$times = json_decode(file_get_contents('https://slack.com/api/channels.history?' . http_build_query([
+$result = json_decode(file_get_contents('https://slack.com/api/conversations.list?' . http_build_query([
     'token'     => $_SESSION['access_token'],
-    'channel'   => $config['channel'],
-    'oldest'    => (new DateTime('today'))->format('U'),
-    'count'     => 1000,
+    'limit'     => 1000,
+])));
+foreach ($result->channels as $item) {
+    if (in_array($item->id, array_keys($config['channels']))) {
+        $channels[$item->id] = $item;
+    }
+}
+
+$times = json_decode(file_get_contents('https://slack.com/api/search.messages?' . http_build_query([
+    'token'     => $_SESSION['access_token'],
+    'query'     => implode(' ', array_merge(
+        array_map(function ($item) {
+            return "in:$item->name";
+        }, $channels),
+        ['on:today']
+    )),
+    'sort'      => 'timestamp',
+    'count'     => 100,
 ])));
 
 $expire = time() + 60*60*24*30;
@@ -38,7 +53,7 @@ if (array_key_exists('dark', $_GET)) {
     setcookie('dark', $_COOKIE['dark'], $expire);
 }
 
-//var_dump($users);
+//var_dump($times);
 
 ?>
 <!DOCTYPE html>
@@ -241,7 +256,7 @@ if (! empty($_COOKIE['tw'])) {
             </div>
             <div class="textWrap">
                 <form action="post.php" method="post" name="posting">
-                    <textarea name="text" id="message" placeholder=""></textarea>
+                    <textarea name="text" id="message" placeholder="Message #<?php print $channels[$config['channel']]->name; ?>"></textarea>
                     <input type="submit">
                 </form>
             </div>
@@ -249,7 +264,7 @@ if (! empty($_COOKIE['tw'])) {
     </div>
     <div class="timeline">
 <?php
-        foreach ($times->messages as $item) {
+        foreach ($times->messages->matches as $item) {
             $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
             $text = str_replace("\n", '<br>', $item->text);
             $text = preg_replace('/<(https?\:\/\/[^<> ]+)>/', '<a href="$1" target="_blank">$1</a>', $text);
@@ -263,9 +278,11 @@ if (! empty($_COOKIE['tw'])) {
                     <div class="name"><?php print $members[$item->user]->real_name; ?></div>
                     <div class="screenname"><?php print $members[$item->user]->name; ?></div>
                     <div class="timestamp">
-                        <a href="https://sencorp-group.slack.com/archives/<?php print $config['channel']; ?>/p<?php print $item->ts; ?>">
-                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?></div>
+                        <a href="<?php print $item->permalink; ?>">
+                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?>
+                            via #<?php print $item->channel->name; ?>
                         </a>
+                    </div>
                 </div>
                 <div class="text"><?php print $text; ?></div>
             </div>

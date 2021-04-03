@@ -7,7 +7,7 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] != 2) {
     exit('require logging in');
 }
 
-$times = json_decode(file_get_contents('https://slack.com/api/channels.history?' . http_build_query([
+$times = json_decode(file_get_contents('https://slack.com/api/conversations.history?' . http_build_query([
     'token'     => $_SESSION['access_token'],
     'channel'   => $config['channel'],
     'oldest'    => (new DateTime('today'))->format('U'),

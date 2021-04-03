@@ -7,11 +7,18 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] != 2) {
     exit('require logging in');
 }
 
-$times = json_decode(file_get_contents('https://slack.com/api/conversations.history?' . http_build_query([
-    'token'     => $_SESSION['access_token'],
-    'channel'   => $config['channel'],
-    'oldest'    => (new DateTime('today'))->format('U'),
-    'count'     => 1000,
+$times = json_decode(file_get_contents('https://slack.com/api/conversations.history', false, stream_context_create([
+    'http' => [
+        'method' => 'POST',
+        'header' => implode(PHP_EOL, [
+            'Authorization: Bearer ' . $_SESSION['access_token'],
+        ]),
+        'content' => http_build_query([
+            'channel'   => $config['channel'],
+            'oldest'    => (new DateTime('today'))->format('U'),
+            'count'     => 1000,
+        ]),
+    ],
 ])));
 
 $ts = null;
@@ -25,8 +32,10 @@ foreach (array_reverse($times->messages) as $item) {
 $result = json_decode(file_get_contents('https://slack.com/api/chat.postMessage', false, stream_context_create([
     'http' => [
         'method'    => 'POST',
+        'header' => implode(PHP_EOL, [
+            'Authorization: Bearer ' . $_SESSION['access_token'],
+        ]),
         'content'   => http_build_query([
-            'token'     => $_SESSION['access_token'],
             'channel'   => $config['channel'],
             'text'      => $_REQUEST['text'],
             'thread_ts' => $ts,

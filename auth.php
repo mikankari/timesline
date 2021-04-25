@@ -11,7 +11,7 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] == 0) {
         'client_id'     => $config['client_id'],
         'state' => 'unyara',
         'team' => $config['team'],
-        'scope' => 'users:read channels:history chat:write:user',
+        'scope' => 'users:read channels:read search:read channels:history chat:write:user',
         'redirect_uri' => $env['baseuri'] . '/auth.php',
     ]));
 } else if ($_SESSION['state'] == 1) {

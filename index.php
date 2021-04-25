@@ -13,8 +13,12 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] != 2) {
     header('Location: auth.php');
 }
 
-$users = json_decode(file_get_contents('https://slack.com/api/users.list?' . http_build_query([
-    'token'     => $_SESSION['access_token'],
+$users = json_decode(file_get_contents('https://slack.com/api/users.list', false, stream_context_create([
+    'http' => [
+        'header' => implode(PHP_EOL, [
+            'Authorization: Bearer ' . $_SESSION['access_token'],
+        ]),
+    ],
 ])));
 foreach ($users->members as $item) {
     if (isset($members[$item->id])) {
@@ -23,9 +27,16 @@ foreach ($users->members as $item) {
     $members[$item->id] = $item;
 }
 
-$result = json_decode(file_get_contents('https://slack.com/api/conversations.list?' . http_build_query([
-    'token'     => $_SESSION['access_token'],
-    'limit'     => 1000,
+$result = json_decode(file_get_contents('https://slack.com/api/conversations.list', false, stream_context_create([
+    'http' => [
+        'method' => 'POST',
+        'header' => implode(PHP_EOL, [
+            'Authorization: Bearer ' . $_SESSION['access_token'],
+        ]),
+        'content' => http_build_query([
+            'limit' => 1000,
+        ]),
+    ],
 ])));
 foreach ($result->channels as $item) {
     if (in_array($item->id, array_keys($config['channels']))) {
@@ -33,16 +44,23 @@ foreach ($result->channels as $item) {
     }
 }
 
-$times = json_decode(file_get_contents('https://slack.com/api/search.messages?' . http_build_query([
-    'token'     => $_SESSION['access_token'],
-    'query'     => implode(' ', array_merge(
-        array_map(function ($item) {
-            return "in:$item->name";
-        }, $channels),
-        ['on:today']
-    )),
-    'sort'      => 'timestamp',
-    'count'     => 100,
+$times = json_decode(file_get_contents('https://slack.com/api/search.messages', false, stream_context_create([
+    'http' => [
+        'method' =>'POST',
+        'header' => implode(PHP_EOL, [
+            'Authorization: Bearer ' . $_SESSION['access_token'],
+        ]),
+        'content' => http_build_query([
+            'query' => implode(' ', array_merge(
+                array_map(function ($item) {
+                    return "in:$item->name";
+                }, $channels),
+                ['on:today']
+            )),
+            'sort'  => 'timestamp',
+            'count' => 100,
+        ]),
+    ],
 ])));
 
 $expire = time() + 60*60*24*30;

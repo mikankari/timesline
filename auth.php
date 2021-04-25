@@ -15,11 +15,16 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] == 0) {
         'redirect_uri' => $env['baseuri'] . '/auth.php',
     ]));
 } else if ($_SESSION['state'] == 1) {
-    $result = json_decode(file_get_contents('https://slack.com/api/oauth.access?' . http_build_query([
-        'client_id'     => $config['client_id'],
-        'client_secret'     => $config['client_secret'],
-        'code' => $_REQUEST['code'],
-        'redirect_uri' => $env['baseuri'] . '/auth.php',
+    $result = json_decode(file_get_contents('https://slack.com/api/oauth.access', false, stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'content' => http_build_query([
+                'client_id'     => $config['client_id'],
+                'client_secret' => $config['client_secret'],
+                'code'          => $_REQUEST['code'],
+                'redirect_uri'  => $env['baseuri'] . '/auth.php',
+            ]),
+        ],
     ])));
     if ($result->ok) {
         $_SESSION['state'] = 2;

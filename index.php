@@ -2,12 +2,6 @@
 
 require_once 'config.php';
 
-function parseBlocks($blocks) {
-    return array_reduce($blocks, function ($carry, $item) {
-        return $carry . (property_exists($item, 'elements') ? parseBlocks($item->elements) : $item->text ?? ' ');
-    }, '');
-}
-
 session_start();
 if (! isset($_SESSION['state']) || $_SESSION['state'] != 2) {
     header('Location: auth.php');
@@ -290,9 +284,8 @@ if (! empty($_COOKIE['tw'])) {
 <?php
         foreach ($times->messages->matches as $item) {
             $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
-            $text = $item->text ?: parseBlocks($item->blocks);
-            $text = str_replace("\n", '<br>', $text);
-            $text = preg_replace('/<?(https?\:\/\/[^<>\s]+)>?/', '<a href="$1" target="_blank">$1</a>', $text);
+            $text = str_replace("\n", '<br>', $item->text);
+            $text = preg_replace('/<(https?\:\/\/[^<> ]+)>/', '<a href="$1" target="_blank">$1</a>', $text);
 ?>
         <div class="message clearfix">
             <div class="avatarWrap">

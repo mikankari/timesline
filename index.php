@@ -38,6 +38,11 @@ foreach ($result->channels as $item) {
     }
 }
 
+if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+    $page = $_GET['page'];
+} else {
+    $page = '1';
+}
 $times = json_decode(file_get_contents('https://slack.com/api/search.messages', false, stream_context_create([
     'http' => [
         'method' =>'POST',
@@ -48,11 +53,11 @@ $times = json_decode(file_get_contents('https://slack.com/api/search.messages', 
             'query' => implode(' ', array_merge(
                 array_map(function ($item) {
                     return "in:$item->name";
-                }, $channels),
-                ['on:today']
+                }, $channels)
             )),
             'sort'  => 'timestamp',
             'count' => 100,
+            'page' => $page,
         ]),
     ],
 ])));
@@ -122,7 +127,7 @@ if (array_key_exists('dark', $_GET)) {
     .dark .text a {
         color: #00AEFF;
     }
-    .modes {
+    .links {
         text-align: center;
     }
 <?php
@@ -263,7 +268,7 @@ if (! empty($_COOKIE['tw'])) {
 </script>
 <div class="container">
     <div class="me">
-        <div class="message modes">
+        <div class="message links">
             <a href=".?tw=<?php print (string) empty($_COOKIE['tw']) ?>">tw</a>
             |
             <a href=".?dark=<?php print (string) empty($_COOKIE['dark']) ?>">dark</a>
@@ -281,6 +286,15 @@ if (! empty($_COOKIE['tw'])) {
         </div>
     </div>
     <div class="timeline">
+        <div class="message links">
+<?php
+        if ($page !== '1') {
+?>
+            <a href=".?page=<?php print $page - 1; ?>">newer</a>
+<?php
+        }
+?>
+        </div>
 <?php
         foreach ($times->messages->matches as $item) {
             $timestamp = new DateTime('@' . substr($item->ts, 0, strpos($item->ts, '.')));
@@ -297,7 +311,7 @@ if (! empty($_COOKIE['tw'])) {
                     <div class="screenname"><?php print $members[$item->user]->name; ?></div>
                     <div class="timestamp">
                         <a href="<?php print $item->permalink; ?>">
-                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('H:i'); ?>
+                            <?php print $timestamp->setTimezone(new DateTimeZone('Asia/Tokyo'))->format('D H:i'); ?>
                             via #<?php print $item->channel->name; ?>
                         </a>
                     </div>
@@ -308,6 +322,9 @@ if (! empty($_COOKIE['tw'])) {
 <?php
         }
 ?>
+        <div class="message links">
+            <a href=".?page=<?php print $page + 1; ?>">older</a>
+        </div>
     </div>
 </div>
 </body>

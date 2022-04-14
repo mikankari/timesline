@@ -289,7 +289,7 @@ if (! empty($_COOKIE['tw'])) {
 ?>
         <div class="message clearfix">
             <div class="avatarWrap">
-                <div class="avatar"><img src="<?php print $members[$item->user]->profile->image_48; ?>" alt="avatar"></div>
+                <div class="avatar"><img src="<?php print $members[$item->user]->profile->image_48 ?: 'https://via.placeholder.com/48'; ?>" alt="avatar"></div>
             </div>
             <div class="textWrap">
                 <div class="nameWrap">

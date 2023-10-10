@@ -18,6 +18,9 @@ if (! isset($_SESSION['state']) || $_SESSION['state'] == 0) {
     $result = json_decode(file_get_contents('https://slack.com/api/oauth.access', false, stream_context_create([
         'http' => [
             'method' => 'POST',
+            'header' => implode(PHP_EOL, [
+                'Content-type: application/x-www-form-urlencoded',
+            ]),
             'content' => http_build_query([
                 'client_id'     => $config['client_id'],
                 'client_secret' => $config['client_secret'],

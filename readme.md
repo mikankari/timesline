@@ -29,3 +29,12 @@ $env = [
     'baseuri' => 'http://localhost:50080',
 ];
 ```
+
+
+## 起動
+
+```
+docker-compose up
+```
+
+ブラウザで http://localhost:50080 を開く

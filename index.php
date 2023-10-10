@@ -26,6 +26,7 @@ $result = json_decode(file_get_contents('https://slack.com/api/conversations.lis
         'method' => 'POST',
         'header' => implode(PHP_EOL, [
             'Authorization: Bearer ' . $_SESSION['access_token'],
+            'Content-type: application/x-www-form-urlencoded',
         ]),
         'content' => http_build_query([
             'limit' => 1000,
@@ -48,6 +49,7 @@ $times = json_decode(file_get_contents('https://slack.com/api/search.messages', 
         'method' =>'POST',
         'header' => implode(PHP_EOL, [
             'Authorization: Bearer ' . $_SESSION['access_token'],
+            'Content-type: application/x-www-form-urlencoded',
         ]),
         'content' => http_build_query([
             'query' => implode(' ', array_merge(
